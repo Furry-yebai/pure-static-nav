@@ -118,6 +118,27 @@
       "url": "https://minecraftsearch.com/zh-CN",
       "category": "工具",
       "icon": "https://minecraftsearch.com/favicon-64.png"
+    },
+    {
+      "id": 18,
+      "name": "音乐解锁",
+      "url": "https://unlock.yebaiwn.top",
+      "category": "工具",
+      "icon": "https://unlock.yebaiwn.top/img/icons/apple-touch-icon-152x152.png"
+    },
+    {
+      "id": 19,
+      "name": "Windy",
+      "url": "https://www.windy.com",
+      "category": "工具",
+      "icon": "https://www.windy.com/img/favicon.png"
+    },
+    {
+      "id": 20,
+      "name": "Zoom Earth",
+      "url": "https://zoom.earth",
+      "category": "工具",
+      "icon": "https://zoom.earth/favicon.ico"
     }
   ],
   "categories": ["AI", "媒体", "开发", "工具"]

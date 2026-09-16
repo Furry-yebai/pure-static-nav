@@ -194,24 +194,14 @@ const sortedCategories = categories.filter(cat => groupedLinks[cat]);
           animation: flipBottom 0.3s ease-out 0.3s forwards;
         }
 
-        /* Stagger reveal animation */
-        @keyframes staggerReveal {
-          0% {
-            opacity: 0;
-            transform: translateY(40px) scale(0.96);
-            filter: blur(6px);
-          }
-          100% {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-            filter: blur(0);
+        @media (prefers-reduced-motion: reduce) {
+          .flip-animate-top,
+          .flip-animate-bottom {
+            animation-duration: 0.3s !important;
           }
         }
 
-        .stagger-item {
-          opacity: 0;
-          animation: staggerReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
+        /* Cards display immediately on load - no reveal animation. */
 
         /* Text decode effect */
         @keyframes textDecode {
@@ -235,10 +225,18 @@ const sortedCategories = categories.filter(cat => groupedLinks[cat]);
           animation: textDecode 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
-        /* 3D tilt card */
+        @media (prefers-reduced-motion: reduce) {
+          .text-decode {
+            animation-duration: 1.4s !important;
+          }
+          .noise-overlay {
+            animation: none !important;
+          }
+        }
+
+        /* 3D tilt card - transform is only applied on hover (JS). A base 3D
+           transform kept the card layer unpainted until a repaint. */
         .tilt-card {
-          transform-style: preserve-3d;
-          transform: perspective(1000px) rotateX(0deg) rotateY(0deg);
           transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
@@ -356,8 +354,8 @@ const sortedCategories = categories.filter(cat => groupedLinks[cat]);
         }, true);
 
         function animateCursor() {
-          cursorX += (mouseX - cursorX) * 0.15;
-          cursorY += (mouseY - cursorY) * 0.15;
+          cursorX += (mouseX - cursorX) * 0.35;
+          cursorY += (mouseY - cursorY) * 0.35;
           if (cursor) {
             cursor.style.left = cursorX + 'px';
             cursor.style.top = cursorY + 'px';
@@ -385,50 +383,45 @@ const sortedCategories = categories.filter(cat => groupedLinks[cat]);
           }
         }, 300);
 
-        // Stagger reveal for cards
-        setTimeout(function() {
-          var items = document.querySelectorAll('.stagger-item');
-          items.forEach(function(item, index) {
-            item.style.animationDelay = (index * 0.05) + 's';
-          });
-        }, 100);
+        // Tilt and magnetic need the cards parsed into the DOM first
+        document.addEventListener('DOMContentLoaded', function() {
+          // 3D tilt effect
+          document.querySelectorAll('.tilt-card').forEach(function(card) {
+            card.addEventListener('mousemove', function(e) {
+              var rect = card.getBoundingClientRect();
+              var x = e.clientX - rect.left;
+              var y = e.clientY - rect.top;
+              var centerX = rect.width / 2;
+              var centerY = rect.height / 2;
+              var rotateX = (y - centerY) / centerY * -6;
+              var rotateY = (x - centerX) / centerX * 6;
+              card.style.transform = 'perspective(1000px) rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg) scale(1.02)';
+            });
 
-        // 3D tilt effect
-        document.querySelectorAll('.tilt-card').forEach(function(card) {
-          card.addEventListener('mousemove', function(e) {
-            var rect = card.getBoundingClientRect();
-            var x = e.clientX - rect.left;
-            var y = e.clientY - rect.top;
-            var centerX = rect.width / 2;
-            var centerY = rect.height / 2;
-            var rotateX = (y - centerY) / centerY * -6;
-            var rotateY = (x - centerX) / centerX * 6;
-            card.style.transform = 'perspective(1000px) rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg) scale(1.02)';
-          });
-
-          card.addEventListener('mouseleave', function() {
-            card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
-          });
-        });
-
-        // Magnetic icon effect
-        document.querySelectorAll('.magnetic-icon').forEach(function(icon) {
-          icon.addEventListener('mousemove', function(e) {
-            var rect = icon.getBoundingClientRect();
-            var x = e.clientX - rect.left - rect.width / 2;
-            var y = e.clientY - rect.top - rect.height / 2;
-            icon.style.transform = 'translate(' + (x * 0.2) + 'px, ' + (y * 0.2) + 'px) scale(1.1)';
+            card.addEventListener('mouseleave', function() {
+              card.style.transform = '';
+            });
           });
 
-          icon.addEventListener('mouseleave', function() {
-            icon.style.transform = 'translate(0, 0) scale(1)';
+          // Magnetic icon effect
+          document.querySelectorAll('.magnetic-icon').forEach(function(icon) {
+            icon.addEventListener('mousemove', function(e) {
+              var rect = icon.getBoundingClientRect();
+              var x = e.clientX - rect.left - rect.width / 2;
+              var y = e.clientY - rect.top - rect.height / 2;
+              icon.style.transform = 'translate(' + (x * 0.2) + 'px, ' + (y * 0.2) + 'px) scale(1.1)';
+            });
+
+            icon.addEventListener('mouseleave', function() {
+              icon.style.transform = 'translate(0, 0) scale(1)';
+            });
           });
         });
       </script>
 
       <main class="space-y-12">
         {sortedCategories.map((category, catIndex) => (
-          <section class="stagger-item" style={`animation-delay: ${0.1 + catIndex * 0.15}s`}>
+          <section>
             <div class="flex items-center gap-3 mb-6">
               <h2 class="text-display-sm font-display text-apple-gray-900 dark:text-apple-gray-100">
                 {category}
@@ -440,8 +433,7 @@ const sortedCategories = categories.filter(cat => groupedLinks[cat]);
               {groupedLinks[category].map((link, linkIndex) => (
                 <a
                   href={link.url}
-                  class="group relative stagger-item tilt-card"
-                  style={`animation-delay: ${(catIndex * 0.15) + (linkIndex * 0.05)}s`}
+                  class="group relative tilt-card"
                   target="_blank"
                   rel="noopener noreferrer"
                 >

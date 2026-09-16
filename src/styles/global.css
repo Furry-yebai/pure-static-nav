@@ -29,26 +29,60 @@
     @apply rounded-2xl p-6 shadow-apple-sm border border-white/30
            transition-all duration-300 ease-out
            hover:shadow-apple hover:-translate-y-1 hover:border-white/50;
-    background: rgba(255, 255, 255, 0.55);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    /* Fallback tint: always visible even if the frosted layer below fails */
+    background: rgba(255, 255, 255, 0.5);
+  }
+
+  /* Frosted glass without backdrop-filter: a blurred copy of the wallpaper
+     lives inside the card. filter: blur() paints reliably in Chromium
+     (unlike backdrop-filter), and matches the page background exactly
+     because it uses the same fixed background. */
+  .card-apple::before {
+    content: '';
+    position: absolute;
+    inset: -60px;
+    z-index: -1;
+    background-image: url('https://uapis.cn/api/v1/image/bing-daily?random=false');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    filter: blur(40px) saturate(180%);
+  }
+
+  /* Milkiness on top of the blurred wallpaper */
+  .card-apple::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: rgba(255, 255, 255, 0.68);
   }
 
   .dark .card-apple {
-    background: rgba(44, 44, 46, 0.55);
+    background: rgba(44, 44, 46, 0.5);
     @apply border-white/10 hover:border-white/20;
+  }
+
+  .dark .card-apple::before {
+    filter: blur(40px) saturate(160%) brightness(0.75);
+  }
+
+  .dark .card-apple::after {
+    background: rgba(29, 29, 31, 0.7);
   }
 
   .icon-container {
     @apply w-12 h-12 rounded-xl flex items-center justify-center
            shadow-sm border border-white/30;
-    background: rgba(255, 255, 255, 0.4);
-    backdrop-filter: blur(12px) saturate(150%);
-    -webkit-backdrop-filter: blur(12px) saturate(150%);
+    background: rgba(255, 255, 255, 0.6);
   }
 
   .dark .icon-container {
-    background: rgba(66, 66, 69, 0.5);
+    background: rgba(66, 66, 69, 0.65);
     @apply border-white/10;
   }
 }
