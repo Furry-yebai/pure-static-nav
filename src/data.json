@@ -1,0 +1,124 @@
+{
+  "links": [
+    {
+      "id": 1,
+      "name": "GitHub",
+      "url": "https://github.com",
+      "category": "开发",
+      "icon": "https://cdn.simpleicons.org/github/181717"
+    },
+    {
+      "id": 2,
+      "name": "YouTube",
+      "url": "https://www.youtube.com",
+      "category": "媒体",
+      "icon": "https://cdn.simpleicons.org/youtube/FF0000"
+    },
+    {
+      "id": 3,
+      "name": "Vercel",
+      "url": "https://vercel.com",
+      "category": "开发",
+      "icon": "https://cdn.simpleicons.org/vercel/000000"
+    },
+    {
+      "id": 4,
+      "name": "哔哩哔哩",
+      "url": "https://www.bilibili.com",
+      "category": "媒体",
+      "icon": "https://cdn.simpleicons.org/bilibili/00A1D6"
+    },
+    {
+      "id": 5,
+      "name": "阿里云",
+      "url": "https://www.aliyun.com",
+      "category": "开发",
+      "icon": "https://cdn.simpleicons.org/alibabacloud/FF6A00"
+    },
+    {
+      "id": 6,
+      "name": "腾讯云",
+      "url": "https://cloud.tencent.com",
+      "category": "开发",
+      "icon": "https://unpkg.com/@lobehub/icons-static-png@latest/light/tencentcloud-color.png"
+    },
+    {
+      "id": 7,
+      "name": "Gemini",
+      "url": "https://gemini.google.com",
+      "category": "AI",
+      "icon": "https://unpkg.com/@lobehub/icons-static-png@latest/light/gemini-color.png"
+    },
+    {
+      "id": 8,
+      "name": "豆包",
+      "url": "https://www.doubao.com",
+      "category": "AI",
+      "icon": "https://unpkg.com/@lobehub/icons-static-png@latest/light/doubao-color.png"
+    },
+    {
+      "id": 9,
+      "name": "DeepSeek",
+      "url": "https://chat.deepseek.com",
+      "category": "AI",
+      "icon": "https://cdn.simpleicons.org/deepseek/4D6BFE"
+    },
+    {
+      "id": 10,
+      "name": "ChatGPT",
+      "url": "https://chat.openai.com",
+      "category": "AI",
+      "icon": "https://unpkg.com/@lobehub/icons-static-svg@latest/icons/openai.svg"
+    },
+    {
+      "id": 11,
+      "name": "DeepSeek开放平台",
+      "url": "https://platform.deepseek.com",
+      "category": "AI",
+      "icon": "https://cdn.simpleicons.org/deepseek/4D6BFE"
+    },
+    {
+      "id": 12,
+      "name": "Cloudflare",
+      "url": "https://dash.cloudflare.com?lang=zh-CN",
+      "category": "开发",
+      "icon": "https://cdn.simpleicons.org/cloudflare/F38020"
+    },
+    {
+      "id": 13,
+      "name": "Twitch",
+      "url": "https://www.twitch.tv",
+      "category": "媒体",
+      "icon": "https://cdn.simpleicons.org/twitch/9146FF"
+    },
+    {
+      "id": 14,
+      "name": "狗云控制台",
+      "url": "https://console.dogyun.com",
+      "category": "开发",
+      "icon":"https://assets.dogyun.com/dudu/media/logos/logo-128px.png"
+    },
+    {
+      "id": 15,
+      "name": "ITDOG",
+      "url": "https://itdog.cn",
+      "category": "工具",
+      "icon": "https://www.itdog.cn/favicon.ico"
+    },
+    {
+      "id": 16,
+      "name": "IPPure",
+      "url": "https://ippure.com",
+      "category": "工具",
+      "icon": "https://ippure.com/logo.png"
+    },
+    {
+      "id": 17,
+      "name": "Minecraft工具",
+      "url": "https://minecraftsearch.com/zh-CN",
+      "category": "工具",
+      "icon": "https://minecraftsearch.com/favicon-64.png"
+    }
+  ],
+  "categories": ["AI", "媒体", "开发", "工具"]
+}

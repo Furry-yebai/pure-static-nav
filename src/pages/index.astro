@@ -1,0 +1,493 @@
+---
+import Layout from '../layouts/Layout.astro';
+import data from '../data.json';
+
+const { links, categories } = data;
+
+function getCategoryGradient(category: string): string {
+  const gradients: Record<string, string> = {
+    'AI': 'from-violet-500 to-purple-500',
+    '媒体': 'from-amber-500 to-orange-500',
+    '开发': 'from-blue-500 to-indigo-500',
+    '工具': 'from-green-500 to-emerald-500'
+  };
+  return gradients[category] || 'from-gray-500 to-gray-600';
+}
+
+function groupByCategory(links: typeof data.links) {
+  const grouped: Record<string, typeof data.links> = {};
+  links.forEach(link => {
+    if (!grouped[link.category]) {
+      grouped[link.category] = [];
+    }
+    grouped[link.category].push(link);
+  });
+  return grouped;
+}
+
+const groupedLinks = groupByCategory(links);
+const sortedCategories = categories.filter(cat => groupedLinks[cat]);
+---
+
+<Layout title="个人导航">
+  <div class="min-h-screen px-4 py-12 md:px-8 lg:px-16">
+    <div class="max-w-6xl mx-auto">
+      <header class="text-center mb-16 animate-fade-in">
+        <div class="flip-clock" id="flip-clock">
+          <div class="flip-unit" id="h1"></div>
+          <div class="flip-unit" id="h2"></div>
+          <div class="flip-colon">:</div>
+          <div class="flip-unit" id="m1"></div>
+          <div class="flip-unit" id="m2"></div>
+          <div class="flip-colon">:</div>
+          <div class="flip-unit" id="s1"></div>
+          <div class="flip-unit" id="s2"></div>
+        </div>
+        <p class="text-xl text-apple-gray-500 font-light max-w-md mx-auto mt-6" id="subtitle">
+          个人常用
+        </p>
+      </header>
+
+      <style is:global>
+        .flip-clock {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+        }
+        .flip-colon {
+          font-size: 2.4rem;
+          font-weight: 700;
+          color: #1d1d1f;
+          opacity: 0.4;
+          line-height: 76px;
+        }
+        :global(.dark) .flip-colon {
+          color: #f5f5f7;
+        }
+        .flip-unit {
+          position: relative;
+          width: 52px;
+          height: 76px;
+          perspective: 300px;
+          border-radius: 8px;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        :global(.dark) .flip-unit {
+          box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        .flip-top {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 50%;
+          overflow: hidden;
+          border-radius: 8px 8px 0 0;
+          background: linear-gradient(180deg, #f0f0f2 0%, #e4e4e8 100%);
+          z-index: 1;
+        }
+        .flip-bottom {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          height: 50%;
+          overflow: hidden;
+          border-radius: 0 0 8px 8px;
+          background: linear-gradient(180deg, #d4d4d8 0%, #c8c8cc 100%);
+          z-index: 1;
+        }
+        :global(.dark) .flip-top {
+          background: linear-gradient(180deg, #3a3a3c 0%, #303032 100%);
+        }
+        :global(.dark) .flip-bottom {
+          background: linear-gradient(180deg, #252527 0%, #1c1c1e 100%);
+        }
+        .flip-top span, .flip-bottom span {
+          position: absolute;
+          width: 100%;
+          height: 76px;
+          line-height: 76px;
+          left: 0;
+          text-align: center;
+          font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          font-size: 2.6rem;
+          font-weight: 600;
+          color: #1d1d1f;
+        }
+        .flip-top span {
+          top: 0;
+        }
+        .flip-bottom span {
+          bottom: 0;
+        }
+        :global(.dark) .flip-top span,
+        :global(.dark) .flip-bottom span {
+          color: #f5f5f7;
+        }
+        .flip-overlay-top {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 50%;
+          overflow: hidden;
+          border-radius: 8px 8px 0 0;
+          background: linear-gradient(180deg, #f0f0f2 0%, #e4e4e8 100%);
+          transform-origin: bottom center;
+          z-index: 3;
+        }
+        .flip-overlay-bottom {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          height: 50%;
+          overflow: hidden;
+          border-radius: 0 0 8px 8px;
+          background: linear-gradient(180deg, #d4d4d8 0%, #c8c8cc 100%);
+          transform-origin: top center;
+          transform: rotateX(90deg);
+          z-index: 3;
+        }
+        :global(.dark) .flip-overlay-top {
+          background: linear-gradient(180deg, #3a3a3c 0%, #303032 100%);
+        }
+        :global(.dark) .flip-overlay-bottom {
+          background: linear-gradient(180deg, #252527 0%, #1c1c1e 100%);
+        }
+        .flip-overlay-top span, .flip-overlay-bottom span {
+          position: absolute;
+          width: 100%;
+          height: 76px;
+          line-height: 76px;
+          left: 0;
+          text-align: center;
+          font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          font-size: 2.6rem;
+          font-weight: 600;
+          color: #1d1d1f;
+        }
+        .flip-overlay-top span {
+          top: 0;
+        }
+        .flip-overlay-bottom span {
+          bottom: 0;
+        }
+        :global(.dark) .flip-overlay-top span,
+        :global(.dark) .flip-overlay-bottom span {
+          color: #f5f5f7;
+        }
+        @keyframes flipTop {
+          0% { transform: rotateX(0deg); }
+          100% { transform: rotateX(-90deg); }
+        }
+        @keyframes flipBottom {
+          0% { transform: rotateX(90deg); }
+          100% { transform: rotateX(0deg); }
+        }
+        .flip-animate-top {
+          animation: flipTop 0.3s ease-in forwards;
+        }
+        .flip-animate-bottom {
+          animation: flipBottom 0.3s ease-out 0.3s forwards;
+        }
+
+        /* Stagger reveal animation */
+        @keyframes staggerReveal {
+          0% {
+            opacity: 0;
+            transform: translateY(40px) scale(0.96);
+            filter: blur(6px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            filter: blur(0);
+          }
+        }
+
+        .stagger-item {
+          opacity: 0;
+          animation: staggerReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* Text decode effect */
+        @keyframes textDecode {
+          0% {
+            opacity: 0;
+            transform: translateY(12px);
+            filter: blur(6px);
+          }
+          50% {
+            opacity: 0.5;
+            filter: blur(3px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+            filter: blur(0);
+          }
+        }
+
+        .text-decode {
+          animation: textDecode 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* 3D tilt card */
+        .tilt-card {
+          transform-style: preserve-3d;
+          transform: perspective(1000px) rotateX(0deg) rotateY(0deg);
+          transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Magnetic icon */
+        .magnetic-icon {
+          transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Noise grain overlay */
+        .noise-overlay {
+          position: fixed;
+          inset: 0;
+          pointer-events: none;
+          z-index: 1;
+          opacity: 0.03;
+          mix-blend-mode: overlay;
+          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+          background-repeat: repeat;
+          animation: noiseShift 0.5s steps(3) infinite;
+        }
+
+        @keyframes noiseShift {
+          0% { transform: translate(0, 0); }
+          33% { transform: translate(-1px, 1px); }
+          66% { transform: translate(1px, -1px); }
+          100% { transform: translate(0, 0); }
+        }
+      </style>
+
+      <div class="noise-overlay"></div>
+
+      <script is:inline>
+        function createDigitHTML(digit) {
+          return '<div class="flip-top"><span>' + digit + '</span></div>' +
+                 '<div class="flip-bottom"><span>' + digit + '</span></div>';
+        }
+
+        var units = ['h1','h2','m1','m2','s1','s2'];
+        var prev = {};
+
+        function getTimeDigits() {
+          var now = new Date();
+          var h = String(now.getHours()).padStart(2, '0');
+          var m = String(now.getMinutes()).padStart(2, '0');
+          var s = String(now.getSeconds()).padStart(2, '0');
+          return [h[0], h[1], m[0], m[1], s[0], s[1]];
+        }
+
+        function initClock() {
+          var digits = getTimeDigits();
+          units.forEach(function(id, i) {
+            var el = document.getElementById(id);
+            el.innerHTML = createDigitHTML(digits[i]);
+            prev[id] = digits[i];
+          });
+        }
+
+        function updateClock() {
+          var digits = getTimeDigits();
+          units.forEach(function(id, i) {
+            var el = document.getElementById(id);
+            var newVal = digits[i];
+            if (newVal !== prev[id]) {
+              var oldVal = prev[id];
+              el.innerHTML =
+                '<div class="flip-top"><span>' + newVal + '</span></div>' +
+                '<div class="flip-bottom"><span>' + oldVal + '</span></div>' +
+                '<div class="flip-overlay-top"><span>' + oldVal + '</span></div>' +
+                '<div class="flip-overlay-bottom"><span>' + newVal + '</span></div>';
+
+              var topOverlay = el.querySelector('.flip-overlay-top');
+              var bottomOverlay = el.querySelector('.flip-overlay-bottom');
+              if (topOverlay) topOverlay.classList.add('flip-animate-top');
+              if (bottomOverlay) bottomOverlay.classList.add('flip-animate-bottom');
+
+              setTimeout(function() {
+                el.innerHTML = createDigitHTML(newVal);
+              }, 600);
+              prev[id] = newVal;
+            }
+          });
+        }
+
+        initClock();
+        setInterval(updateClock, 1000);
+
+        // Custom cursor
+        var cursor = document.getElementById('custom-cursor');
+        var mouseX = 0, mouseY = 0;
+        var cursorX = 0, cursorY = 0;
+
+        document.addEventListener('mousemove', function(e) {
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+          if (cursor) cursor.classList.add('visible');
+        });
+
+        document.addEventListener('mouseleave', function() {
+          if (cursor) cursor.classList.remove('visible');
+        });
+
+        // Hover effect on interactive elements
+        document.addEventListener('mouseenter', function(e) {
+          var target = e.target;
+          if (target.closest('a, button, .tilt-card, .magnetic-icon, .card-apple')) {
+            if (cursor) cursor.classList.add('hover');
+          }
+        }, true);
+
+        document.addEventListener('mouseleave', function(e) {
+          var target = e.target;
+          if (target.closest('a, button, .tilt-card, .magnetic-icon, .card-apple')) {
+            if (cursor) cursor.classList.remove('hover');
+          }
+        }, true);
+
+        function animateCursor() {
+          cursorX += (mouseX - cursorX) * 0.15;
+          cursorY += (mouseY - cursorY) * 0.15;
+          if (cursor) {
+            cursor.style.left = cursorX + 'px';
+            cursor.style.top = cursorY + 'px';
+          }
+          requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+
+        // Dynamic copyright year
+        setTimeout(function() {
+          var copyrightText = document.getElementById('copyright-text');
+          if (copyrightText) {
+            var startYear = 2026;
+            var currentYear = new Date().getFullYear();
+            var yearStr = currentYear > startYear ? startYear + '-' + currentYear : String(startYear);
+            copyrightText.textContent = yearStr + ' 夜白. All rights reserved.';
+          }
+        }, 100);
+
+        // Text decode effect for subtitle
+        setTimeout(function() {
+          var subtitle = document.getElementById('subtitle');
+          if (subtitle) {
+            subtitle.classList.add('text-decode');
+          }
+        }, 300);
+
+        // Stagger reveal for cards
+        setTimeout(function() {
+          var items = document.querySelectorAll('.stagger-item');
+          items.forEach(function(item, index) {
+            item.style.animationDelay = (index * 0.05) + 's';
+          });
+        }, 100);
+
+        // 3D tilt effect
+        document.querySelectorAll('.tilt-card').forEach(function(card) {
+          card.addEventListener('mousemove', function(e) {
+            var rect = card.getBoundingClientRect();
+            var x = e.clientX - rect.left;
+            var y = e.clientY - rect.top;
+            var centerX = rect.width / 2;
+            var centerY = rect.height / 2;
+            var rotateX = (y - centerY) / centerY * -6;
+            var rotateY = (x - centerX) / centerX * 6;
+            card.style.transform = 'perspective(1000px) rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg) scale(1.02)';
+          });
+
+          card.addEventListener('mouseleave', function() {
+            card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
+          });
+        });
+
+        // Magnetic icon effect
+        document.querySelectorAll('.magnetic-icon').forEach(function(icon) {
+          icon.addEventListener('mousemove', function(e) {
+            var rect = icon.getBoundingClientRect();
+            var x = e.clientX - rect.left - rect.width / 2;
+            var y = e.clientY - rect.top - rect.height / 2;
+            icon.style.transform = 'translate(' + (x * 0.2) + 'px, ' + (y * 0.2) + 'px) scale(1.1)';
+          });
+
+          icon.addEventListener('mouseleave', function() {
+            icon.style.transform = 'translate(0, 0) scale(1)';
+          });
+        });
+      </script>
+
+      <main class="space-y-12">
+        {sortedCategories.map((category, catIndex) => (
+          <section class="stagger-item" style={`animation-delay: ${0.1 + catIndex * 0.15}s`}>
+            <div class="flex items-center gap-3 mb-6">
+              <h2 class="text-display-sm font-display text-apple-gray-900 dark:text-apple-gray-100">
+                {category}
+              </h2>
+              <div class="flex-1 h-px bg-gradient-to-r from-apple-gray-200 dark:from-apple-gray-700 to-transparent ml-4"></div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              {groupedLinks[category].map((link, linkIndex) => (
+                <a
+                  href={link.url}
+                  class="group relative stagger-item tilt-card"
+                  style={`animation-delay: ${(catIndex * 0.15) + (linkIndex * 0.05)}s`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <div class="card-apple h-full flex items-center gap-4 p-5">
+                    <div class="icon-container magnetic-icon group-hover:scale-110 transition-transform duration-300 p-2.5">
+                      <img src={link.icon} alt={link.name} class="w-full h-full object-contain" />
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <div class="font-semibold text-apple-gray-900 dark:text-apple-gray-100 truncate group-hover:text-apple-blue-500 transition-colors">
+                        {link.name}
+                      </div>
+                      <div class="text-sm text-apple-gray-500 truncate">
+                        {new URL(link.url).hostname}
+                      </div>
+                    </div>
+                    <div class="opacity-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:translate-x-1">
+                      <svg class="w-5 h-5 text-apple-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                      </svg>
+                    </div>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </section>
+        ))}
+      </main>
+
+      <footer class="mt-16 pb-8 text-center" id="footer">
+        <div class="flex items-center justify-center gap-2 text-sm text-apple-gray-400 dark:text-apple-gray-500">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M15 9.354a4 4 0 100 5.292"/>
+          </svg>
+          <span id="copyright-text"></span>
+        </div>
+      </footer>
+      <script is:inline>
+        (function() {
+          var startYear = 2026;
+          var currentYear = new Date().getFullYear();
+          var yearText = currentYear > startYear ? startYear + '-' + currentYear : String(startYear);
+          var el = document.getElementById('copyright-year');
+          if (el) el.textContent = yearText + ' 夜白. All rights reserved.';
+        })();
+      </script>
+    </div>
+  </div>
+</Layout>

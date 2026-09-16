@@ -1,0 +1,22 @@
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "default",
+  "rsc": false,
+  "tsx": true,
+  "aliases": {
+    "components": "@/components",
+    "utils": "@/lib/utils",
+    "ui": "@/components/ui",
+    "lib": "@/lib",
+    "hooks": "@/hooks"
+  },
+  "tailwind": {
+    "config": "tailwind.config.mjs",
+    "css": "src/styles/global.css",
+    "baseColor": "gray",
+    "cssVariables": false
+  },
+  "registries": {
+    "@magicui": "https://magicui.design/r/{name}"
+  }
+}
