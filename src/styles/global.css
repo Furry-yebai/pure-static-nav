@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Single source of truth for the wallpaper. The page background and the
+   card frosted layer both use this, so they can never drift apart. */
+:root {
+  --wallpaper: url('https://bing.biturl.top/?resolution=UHD&format=image&index=0&mkt=zh-CN');
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
@@ -45,7 +51,7 @@
     position: absolute;
     inset: -60px;
     z-index: -1;
-    background-image: url('https://uapis.cn/api/v1/image/bing-daily?random=false');
+    background-image: var(--wallpaper);
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
